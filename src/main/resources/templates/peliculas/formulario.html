@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${titulo + ' - Blockbuster Fake'}">Película - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h2 mb-0">
+                                <i class="bi bi-camera-video me-2"></i>
+                                <span th:text="${titulo}">Nueva Película</span>
+                            </h1>
+                            <p class="text-muted mt-2">Completa la información de la película</p>
+                        </div>
+                        <div>
+                            <a href="/peliculas" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Catálogo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-film me-2"></i>Información de la Película
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/peliculas/guardar}" th:object="${pelicula}" method="post">
+                        <input type="hidden" th:field="*{idPelicula}">
+
+                        <div class="row g-3">
+                            <!-- Título -->
+                            <div class="col-12">
+                                <label for="titulo" class="form-label">
+                                    <i class="bi bi-type me-1"></i>Título de la Película
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="titulo"
+                                       th:field="*{titulo}"
+                                       th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
+                                       placeholder="Ingresa el título de la película"
+                                       maxlength="200">
+                                <div th:if="${#fields.hasErrors('titulo')}"
+                                     class="invalid-feedback"
+                                     th:errors="*{titulo}"></div>
+                            </div>
+
+                            <!-- Género -->
+                            <div class="col-md-6">
+                                <label for="genero" class="form-label">
+                                    <i class="bi bi-tag me-1"></i>Género
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select"
+                                        id="genero"
+                                        th:field="*{genero}"
+                                        th:classappend="${#fields.hasErrors('genero')} ? 'is-invalid' : ''">
+                                    <option value="">Selecciona un género</option>
+                                    <option value="Acción">Acción</option>
+                                    <option value="Aventura">Aventura</option>
+                                    <option value="Comedia">Comedia</option>
+                                    <option value="Drama">Drama</option>
+                                    <option value="Terror">Terror</option>
+                                    <option value="Ciencia Ficción">Ciencia Ficción</option>
+                                    <option value="Romance">Romance</option>
+                                    <option value="Thriller">Thriller</option>
+                                    <option value="Animación">Animación</option>
+                                    <option value="Documental">Documental</option>
+                                    <option value="Musical">Musical</option>
+                                    <option value="Fantasía">Fantasía</option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('genero')}"
+                                     class="invalid-feedback"
+                                     th:errors="*{genero}"></div>
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-md-6">
+                                <label for="stock" class="form-label">
+                                    <i class="bi bi-box me-1"></i>Stock Disponible
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-hash"></i>
+                                        </span>
+                                    <input type="number"
+                                           class="form-control"
+                                           id="stock"
+                                           th:field="*{stock}"
+                                           th:classappend="${#fields.hasErrors('stock')} ? 'is-invalid' : ''"
+                                           placeholder="0"
+                                           min="0"
+                                           step="1">
+                                    <div th:if="${#fields.hasErrors('stock')}"
+                                         class="invalid-feedback"
+                                         th:errors="*{stock}"></div>
+                                </div>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Número de copias disponibles para alquiler
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vista previa -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card bg-light">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="bi bi-eye me-2"></i>Vista Previa
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3">
+                                                <i class="bi bi-camera-reels" style="font-size: 2.5rem; color: #6c757d;"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h5 class="mb-1" id="preview-titulo">
+                                                    <span th:text="${pelicula.titulo ?: 'Título de la película'}"></span>
+                                                </h5>
+                                                <p class="mb-1">
+                                                        <span class="badge bg-secondary" id="preview-genero"
+                                                              th:text="${pelicula.genero ?: 'Género'}"></span>
+                                                </p>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-box me-1"></i>
+                                                    Stock: <span id="preview-stock" th:text="${pelicula.stock ?: 0}">0</span> unidades
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="/peliculas" class="btn btn-outline-secondary">
+                                        <i class="bi bi-x-circle me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <span th:text="${pelicula.idPelicula == null ? 'Crear Película' : 'Actualizar Película'}">
+                                                Guardar
+                                            </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Vista previa en tiempo real
+    document.addEventListener('DOMContentLoaded', function() {
+        const tituloInput = document.getElementById('titulo');
+        const generoSelect = document.getElementById('genero');
+        const stockInput = document.getElementById('stock');
+
+        const previewTitulo = document.getElementById('preview-titulo');
+        const previewGenero = document.getElementById('preview-genero');
+        const previewStock = document.getElementById('preview-stock');
+
+        tituloInput.addEventListener('input', function() {
+            previewTitulo.textContent = this.value || 'Título de la película';
+        });
+
+        generoSelect.addEventListener('change', function() {
+            previewGenero.textContent = this.value || 'Género';
+        });
+
+        stockInput.addEventListener('input', function() {
+            previewStock.textContent = this.value || '0';
+        });
+    });
+</script>
+</body>
+</html>

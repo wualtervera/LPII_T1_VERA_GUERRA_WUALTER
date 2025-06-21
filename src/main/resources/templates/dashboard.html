@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Dashboard - Blockbuster Fake</title>
+</head>
+<body>
+    <section>
+        <!-- Header del Dashboard -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-4">
+                        <i class="bi bi-speedometer2 dashboard-icon mb-3"></i>
+                        <h1 class="h2 mb-3">Panel de Control</h1>
+                        <p class="lead text-muted">Gestiona tu sistema de alquiler de películas de forma eficiente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas principales -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card h-100 animate__animated animate__fadeInUp">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people dashboard-icon mb-3"></i>
+                        <div class="stats-number" th:text="${totalClientes}">0</div>
+                        <h5 class="card-title mb-0">Clientes</h5>
+                        <small class="text-white-50">Registrados en el sistema</small>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center">
+                        <a href="/clientes" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-right me-1"></i>Ver todos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card h-100 animate__animated animate__fadeInUp animate__delay-1s" 
+                     style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="card-body text-center">
+                        <i class="bi bi-camera-reels dashboard-icon mb-3"></i>
+                        <div class="stats-number" th:text="${totalPeliculas}">0</div>
+                        <h5 class="card-title mb-0">Películas</h5>
+                        <small class="text-white-50">En el catálogo</small>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center">
+                        <a href="/peliculas" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-right me-1"></i>Ver catálogo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card h-100 animate__animated animate__fadeInUp animate__delay-2s"
+                     style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check-circle dashboard-icon mb-3"></i>
+                        <div class="stats-number" th:text="${alquileresActivos}">0</div>
+                        <h5 class="card-title mb-0">Activos</h5>
+                        <small class="text-white-50">Alquileres en curso</small>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center">
+                        <a href="/alquileres/activos" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-right me-1"></i>Ver activos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card h-100 animate__animated animate__fadeInUp animate__delay-3s"
+                     style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                    <div class="card-body text-center">
+                        <i class="bi bi-exclamation-triangle dashboard-icon mb-3"></i>
+                        <div class="stats-number" th:text="${alquileresRetrasados}">0</div>
+                        <h5 class="card-title mb-0">Retrasados</h5>
+                        <small class="text-white-50">Requieren atención</small>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 text-center">
+                        <a href="/alquileres/retrasados" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-right me-1"></i>Ver retrasados
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-lightning me-2"></i>
+                            Acciones Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-md-6">
+                                <a href="/alquileres/nuevo" class="btn btn-primary w-100 py-3">
+                                    <i class="bi bi-plus-circle mb-2 d-block" style="font-size: 2rem;"></i>
+                                    <strong>Nuevo Alquiler</strong>
+                                    <small class="d-block">Crear un nuevo alquiler</small>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <a href="/clientes/nuevo" class="btn btn-success w-100 py-3">
+                                    <i class="bi bi-person-plus mb-2 d-block" style="font-size: 2rem;"></i>
+                                    <strong>Nuevo Cliente</strong>
+                                    <small class="d-block">Registrar cliente</small>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <a href="/peliculas/nuevo" class="btn btn-info w-100 py-3">
+                                    <i class="bi bi-camera-video mb-2 d-block" style="font-size: 2rem;"></i>
+                                    <strong>Nueva Película</strong>
+                                    <small class="d-block">Agregar al catálogo</small>
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <a href="/peliculas/disponibles" class="btn btn-warning w-100 py-3">
+                                    <i class="bi bi-search mb-2 d-block" style="font-size: 2rem;"></i>
+                                    <strong>Ver Disponibles</strong>
+                                    <small class="d-block">Películas en stock</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del sistema -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Bienvenido a Blockbuster Fake
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Sistema integral de gestión de alquiler de películas</p>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="bi bi-check-circle text-success me-2"></i>Funcionalidades principales:</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="bi bi-arrow-right me-2"></i>Gestión de clientes</li>
+                                    <li><i class="bi bi-arrow-right me-2"></i>Catálogo de películas</li>
+                                    <li><i class="bi bi-arrow-right me-2"></i>Control de alquileres</li>
+                                    <li><i class="bi bi-arrow-right me-2"></i>Seguimiento de estados</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="bi bi-gear text-primary me-2"></i>Características del sistema:</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="bi bi-arrow-right me-2"></i>Interfaz moderna y responsive</li>
+                                    <li><i class="bi bi-arrow-right me-2"></i>Validaciones en tiempo real</li>
+                                    <li><i class="bi bi-arrow-right me-2"></i>Control de stock automático</li>
+                                    <li><i class="bi bi-arrow-right me-2"></i>Reportes en tiempo real</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar-event me-2"></i>
+                            Estado del Sistema
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Sistema:</span>
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle me-1"></i>Operativo
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Base de datos:</span>
+                            <span class="badge bg-success">
+                                <i class="bi bi-database-check me-1"></i>Conectada
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span>Última actualización:</span>
+                            <small class="text-muted" th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}"></small>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <i class="bi bi-shield-check text-success me-2"></i>
+                            <small class="text-muted">Todos los sistemas funcionando correctamente</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

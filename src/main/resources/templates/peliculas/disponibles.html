@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Películas Disponibles - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h2 mb-0">
+                                <i class="bi bi-check-circle me-2 text-success"></i>
+                                Películas Disponibles
+                            </h1>
+                            <p class="text-muted mt-2">Películas con stock disponible para alquiler</p>
+                        </div>
+                        <div>
+                            <a href="/peliculas" class="btn btn-outline-secondary me-2">
+                                <i class="bi bi-arrow-left me-2"></i>Ver Todas
+                            </a>
+                            <a href="/alquileres/nuevo" class="btn btn-success">
+                                <i class="bi bi-plus-circle me-2"></i>Nuevo Alquiler
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas rápidas -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                <div class="card-body text-center text-white">
+                    <i class="bi bi-check-circle dashboard-icon mb-2"></i>
+                    <h3 class="mb-0" th:text="${peliculas.size()}">0</h3>
+                    <small>Películas Disponibles</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100" style="background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);">
+                <div class="card-body text-center text-white">
+                    <i class="bi bi-collection dashboard-icon mb-2"></i>
+                    <h3 class="mb-0" th:text="${totalCopias}">0</h3>
+                    <small>Total de Copias</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
+                <div class="card-body text-center text-white">
+                    <i class="bi bi-tags dashboard-icon mb-2"></i>
+                    <h3 class="mb-0" th:text="${generosUnicos}">0</h3>
+                    <small>Géneros Diferentes</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="filtroGenero" class="form-label">
+                                <i class="bi bi-funnel me-1"></i>Filtrar por Género
+                            </label>
+                            <select class="form-select" id="filtroGenero">
+                                <option value="">Todos los géneros</option>
+                                <option value="Acción">Acción</option>
+                                <option value="Aventura">Aventura</option>
+                                <option value="Comedia">Comedia</option>
+                                <option value="Drama">Drama</option>
+                                <option value="Terror">Terror</option>
+                                <option value="Ciencia Ficción">Ciencia Ficción</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Thriller">Thriller</option>
+                                <option value="Animación">Animación</option>
+                                <option value="Documental">Documental</option>
+                                <option value="Musical">Musical</option>
+                                <option value="Fantasía">Fantasía</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="buscarTitulo" class="form-label">
+                                <i class="bi bi-search me-1"></i>Buscar por Título
+                            </label>
+                            <input type="text" class="form-control" id="buscarTitulo" placeholder="Escribe el título...">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ordenar" class="form-label">
+                                <i class="bi bi-sort-down me-1"></i>Ordenar por
+                            </label>
+                            <select class="form-select" id="ordenar">
+                                <option value="titulo">Título (A-Z)</option>
+                                <option value="titulo-desc">Título (Z-A)</option>
+                                <option value="stock">Stock (Menor a Mayor)</option>
+                                <option value="stock-desc">Stock (Mayor a Menor)</option>
+                                <option value="genero">Género (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de películas disponibles -->
+    <div class="row" id="peliculasContainer">
+        <div th:if="${peliculas.empty}" class="col-12">
+            <div class="text-center py-5">
+                <i class="bi bi-emoji-frown" style="font-size: 4rem; color: #dee2e6;"></i>
+                <h4 class="mt-3 text-muted">No hay películas disponibles</h4>
+                <p class="text-muted">Todas las películas están agotadas o no hay películas registradas</p>
+                <a href="/peliculas/nuevo" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar Nueva Película
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${!peliculas.empty}" class="col-lg-4 col-md-6 mb-4" th:each="pelicula : ${peliculas}"
+             th:data-genero="${pelicula.genero}" th:data-titulo="${pelicula.titulo}">
+            <div class="card h-100 pelicula-card">
+                <div class="card-body d-flex flex-column">
+                    <!-- Header de la tarjeta -->
+                    <div class="text-center mb-3">
+                        <div class="pelicula-icon mb-3">
+                            <i class="bi bi-camera-reels" style="font-size: 3rem; color: #6c757d;"></i>
+                        </div>
+                        <h5 class="card-title mb-2" th:text="${pelicula.titulo}">Título</h5>
+                        <span class="badge bg-primary mb-2" th:text="${pelicula.genero}">Género</span>
+                    </div>
+
+                    <!-- Información de stock -->
+                    <div class="stock-info text-center mb-3">
+                        <div class="stock-badge">
+                            <i class="bi bi-box-seam me-1"></i>
+                            <strong th:text="${pelicula.stock}">0</strong> disponibles
+                        </div>
+                        <div class="stock-bar mt-2">
+                            <div class="stock-fill"
+                                 th:style="'width: ' + ${pelicula.stock > 10 ? 100 : pelicula.stock * 10} + '%'"></div>
+                        </div>
+                    </div>
+
+                    <!-- Estado visual -->
+                    <div class="availability-status text-center mb-3">
+                        <div class="status-indicator">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span class="text-success fw-bold">DISPONIBLE</span>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="mt-auto">
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/peliculas/ver/{id}(id=${pelicula.idPelicula})}"
+                               class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-eye me-2"></i>Ver Detalles
+                            </a>
+                            <div class="btn-group" role="group">
+                                <a href="/alquileres/nuevo"
+                                   class="btn btn-success btn-sm">
+                                    <i class="bi bi-cart-plus me-1"></i>Alquilar
+                                </a>
+                                <a th:href="@{/peliculas/editar/{id}(id=${pelicula.idPelicula})}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indicador de popularidad (placeholder) -->
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="bi bi-hash me-1"></i>ID: <span th:text="${pelicula.idPelicula}">1</span>
+                        </small>
+                        <div class="rating">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star text-muted"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje cuando no hay resultados del filtro -->
+    <div class="row" id="noResultados" style="display: none;">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="bi bi-search" style="font-size: 4rem; color: #dee2e6;"></i>
+                <h4 class="mt-3 text-muted">No se encontraron películas</h4>
+                <p class="text-muted">Prueba con otros filtros de búsqueda</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .dashboard-card {
+        border: none;
+        border-radius: 15px;
+        color: white;
+        transition: transform 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .dashboard-icon {
+        font-size: 2.5rem;
+        opacity: 0.9;
+    }
+
+    .pelicula-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pelicula-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .pelicula-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #28a745, #20c997);
+    }
+
+    .pelicula-icon {
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 50%;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .stock-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .stock-badge {
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    .stock-bar {
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .stock-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #28a745, #20c997);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .availability-status {
+        padding: 10px;
+        background: rgba(40, 167, 69, 0.1);
+        border-radius: 8px;
+        border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .status-indicator i {
+        font-size: 1.2rem;
+        margin-right: 5px;
+    }
+
+    .rating i {
+        font-size: 0.9rem;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+        .pelicula-card {
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtroGenero = document.getElementById('filtroGenero');
+        const buscarTitulo = document.getElementById('buscarTitulo');
+        const ordenar = document.getElementById('ordenar');
+        const peliculasContainer = document.getElementById('peliculasContainer');
+        const noResultados = document.getElementById('noResultados');
+
+        let peliculasOriginales = Array.from(peliculasContainer.children).filter(el =>
+            el.classList.contains('col-lg-4')
+        );
+
+        function filtrarYOrdenar() {
+            const generoSeleccionado = filtroGenero.value.toLowerCase();
+            const textoBusqueda = buscarTitulo.value.toLowerCase();
+            const criterioOrden = ordenar.value;
+
+            // Filtrar películas
+            let peliculasFiltradas = peliculasOriginales.filter(pelicula => {
+                const genero = pelicula.dataset.genero.toLowerCase();
+                const titulo = pelicula.dataset.titulo.toLowerCase();
+
+                const coincideGenero = !generoSeleccionado || genero === generoSeleccionado;
+                const coincideTitulo = !textoBusqueda || titulo.includes(textoBusqueda);
+
+                return coincideGenero && coincideTitulo;
+            });
+
+            // Ordenar películas
+            peliculasFiltradas.sort((a, b) => {
+                const tituloA = a.dataset.titulo;
+                const tituloB = b.dataset.titulo;
+                const generoA = a.dataset.genero;
+                const generoB = b.dataset.genero;
+
+                // Obtener stock desde el DOM
+                const stockA = parseInt(a.querySelector('.stock-badge strong').textContent);
+                const stockB = parseInt(b.querySelector('.stock-badge strong').textContent);
+
+                switch(criterioOrden) {
+                    case 'titulo':
+                        return tituloA.localeCompare(tituloB);
+                    case 'titulo-desc':
+                        return tituloB.localeCompare(tituloA);
+                    case 'stock':
+                        return stockA - stockB;
+                    case 'stock-desc':
+                        return stockB - stockA;
+                    case 'genero':
+                        return generoA.localeCompare(generoB);
+                    default:
+                        return 0;
+                }
+            });
+
+            // Limpiar container
+            peliculasContainer.innerHTML = '';
+
+            // Mostrar películas filtradas o mensaje de no resultados
+            if (peliculasFiltradas.length === 0) {
+                noResultados.style.display = 'block';
+            } else {
+                noResultados.style.display = 'none';
+                peliculasFiltradas.forEach(pelicula => {
+                    peliculasContainer.appendChild(pelicula);
+                });
+            }
+        }
+
+        // Event listeners
+        filtroGenero.addEventListener('change', filtrarYOrdenar);
+        buscarTitulo.addEventListener('input', filtrarYOrdenar);
+        ordenar.addEventListener('change', filtrarYOrdenar);
+
+        // Efecto de hover mejorado para las tarjetas
+        document.querySelectorAll('.pelicula-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animación de entrada para las tarjetas
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.pelicula-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    });
+</script>
+</body>
+</html>

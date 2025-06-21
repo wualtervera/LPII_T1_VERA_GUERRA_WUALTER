@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Clientes - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-0">
+                <i class="bi bi-people me-2"></i>
+                Gestión de Clientes
+            </h1>
+            <p class="text-muted mb-0">Administra la información de tus clientes</p>
+        </div>
+        <div>
+            <a href="/clientes/nuevo" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>
+                Nuevo Cliente
+            </a>
+        </div>
+    </div>
+
+    <!-- Tarjeta principal -->
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list me-2"></i>
+                        Lista de Clientes
+                    </h5>
+                </div>
+                <div class="col-auto">
+                    <span class="badge bg-primary" th:text="|Total: ${#lists.size(clientes)}|">Total: 0</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Tabla de clientes -->
+            <div class="table-responsive" th:if="${not #lists.isEmpty(clientes)}">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            <i class="bi bi-hash me-1"></i>
+                            ID
+                        </th>
+                        <th>
+                            <i class="bi bi-person me-1"></i>
+                            Nombre
+                        </th>
+                        <th>
+                            <i class="bi bi-envelope me-1"></i>
+                            Email
+                        </th>
+                        <th width="200">
+                            <i class="bi bi-gear me-1"></i>
+                            Acciones
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="cliente : ${clientes}" class="animate__animated animate__fadeInUp">
+                        <td>
+                            <span class="badge bg-secondary" th:text="${cliente.idCliente}">1</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                                    <i class="bi bi-person text-white"></i>
+                                </div>
+                                <div>
+                                    <strong th:text="${cliente.nombre}">Nombre del Cliente</strong>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:text="${cliente.email}">cliente@email.com</span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a th:href="@{/clientes/ver/{id}(id=${cliente.idCliente})}"
+                                   class="btn btn-sm btn-outline-info"
+                                   title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a th:href="@{/clientes/editar/{id}(id=${cliente.idCliente})}"
+                                   class="btn btn-sm btn-outline-primary"
+                                   title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a th:href="@{/clientes/eliminar/{id}(id=${cliente.idCliente})}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="Eliminar"
+                                   onclick="return confirm('¿Está seguro de eliminar este cliente?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Estado vacío -->
+            <div th:if="${#lists.isEmpty(clientes)}" class="text-center py-5">
+                <i class="bi bi-people" style="font-size: 4rem; color: #dee2e6;"></i>
+                <h4 class="mt-3 text-muted">No hay clientes registrados</h4>
+                <p class="text-muted mb-4">Comienza agregando tu primer cliente al sistema</p>
+                <a href="/clientes/nuevo" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Registrar primer cliente
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-4" th:if="${not #lists.isEmpty(clientes)}">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <i class="bi bi-people text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Clientes Activos</h5>
+                            <p class="text-muted">Todos los clientes registrados están disponibles para realizar alquileres</p>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Datos Seguros</h5>
+                            <p class="text-muted">La información de los clientes está protegida y validada</p>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-graph-up text-info" style="font-size: 2rem;"></i>
+                            <h5 class="mt-2">Gestión Eficiente</h5>
+                            <p class="text-muted">Administra fácilmente toda la información de tus clientes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .avatar-sm {
+            width: 40px;
+            height: 40px;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+    </style>
+</section>
+</body>
+</html>

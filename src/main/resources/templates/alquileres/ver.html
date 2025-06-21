@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Detalles del Alquiler - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/alquileres" class="text-decoration-none">Alquileres</a></li>
+            <li class="breadcrumb-item active">Detalles del Alquiler</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-eye dashboard-icon mb-3 text-primary"></i>
+                    <h1 class="h2 mb-3">Detalles del Alquiler</h1>
+                    <p class="lead text-muted">Información completa del alquiler</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del Alquiler -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Información General
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold text-muted">ID Alquiler:</td>
+                                    <td th:text="${alquiler.idAlquiler}" class="fw-bold">#001</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-muted">Fecha de Alquiler:</td>
+                                    <td th:text="${#temporals.format(alquiler.fecha, 'dd/MM/yyyy')}" class="fw-bold">
+                                        01/01/2025
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-muted">Fecha de Devolución:</td>
+                                    <td th:text="${#temporals.format(alquiler.fecha, 'dd/MM/yyyy')}" class="fw-bold">
+                                        08/01/2025
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-muted">Total:</td>
+                                    <td class="fw-bold text-success">
+                                        <i class="bi bi-currency-dollar"></i>
+                                        <span th:text="${#numbers.formatDecimal(alquiler.total, 1, 2)}">15.00</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold text-muted">Estado:</td>
+                                    <td>
+                                            <span th:switch="${alquiler.estado.name()}" class="badge fs-6">
+                                                <span th:case="'ACTIVO'" class="badge-success">
+                                                    <i class="bi bi-check-circle me-1"></i>Activo
+                                                </span>
+                                                <span th:case="'DEVUELTO'" class="badge bg-info">
+                                                    <i class="bi bi-arrow-return-left me-1"></i>Devuelto
+                                                </span>
+                                                <span th:case="'RETRASADO'" class="badge-danger">
+                                                    <i class="bi bi-exclamation-triangle me-1"></i>Retrasado
+                                                </span>
+                                                <span th:case="'CANCELADO'" class="badge bg-secondary">
+                                                    <i class="bi bi-x-circle me-1"></i>Cancelado
+                                                </span>
+                                            </span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${alquiler.fecha}">
+                                    <td class="fw-bold text-muted">Fecha Dev. Real:</td>
+                                    <td th:text="${#temporals.format(alquiler.fecha, 'dd/MM/yyyy')}" class="fw-bold">
+                                        10/01/2025
+                                    </td>
+                                </tr>
+                                <!--                                <tr th:if="${alquiler.multa != null and alquiler.multa > 0}">-->
+                                <tr>
+                                    <td class="fw-bold text-muted">Multa:</td>
+                                    <td class="fw-bold text-danger">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        <span>0.00</span>
+                                        <!--                                        $<span th:text="${#numbers.formatDecimal(alquiler.multa, 1, 2)}">5.00</span>-->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-muted">Observaciones:</td>
+                                    <td>Ninguna</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del Cliente -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person me-2"></i>
+                        Cliente
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-person-circle text-primary" style="font-size: 4rem;"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2" th:text="${alquiler.cliente.nombre}">Juan Pérez</h6>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-envelope me-2"></i>
+                        <span th:text="${alquiler.cliente.email}">juan@email.com</span>
+                    </p>
+                    <a th:href="@{'/clientes/ver/' + ${alquiler.cliente.idCliente}}"
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye me-1"></i>Ver Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Películas Alquiladas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-camera-reels me-2"></i>
+                        Películas Alquiladas
+                    </h5>
+                    <span class="badge bg-primary" th:text="${#lists.size(alquiler.detalles)}">2</span>
+                </div>
+                <div class="card-body">
+                    <div class="row" th:if="${alquiler.detalles != null and !#lists.isEmpty(alquiler.detalles)}">
+                        <div class="col-lg-6 col-md-12 mb-3" th:each="detalle : ${alquiler.detalles}">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="row g-0 h-100">
+                                    <div class="col-4">
+                                        <div class="bg-gradient-primary d-flex align-items-center justify-content-center h-100">
+                                            <i class="bi bi-film text-white" style="font-size: 3rem;"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-bold mb-2" th:text="${detalle.pelicula.titulo}">
+                                                Título de la Película</h6>
+                                            <p class="card-text text-muted small mb-2">
+                                                <i class="bi bi-tags me-1"></i>
+                                                <span th:text="${detalle.pelicula.genero}">Acción</span>
+                                            </p>
+                                            <p class="card-text">
+                                                <strong class="text-success">
+                                                    S/.<span th:text="${#numbers.formatDecimal(precioUnitario, 1, 2)}">7.50</span>
+                                                </strong>
+                                                <small class="text-muted"> x </small>
+                                                <span th:text="${detalle.cantidad}">1</span>
+                                                <small class="text-muted"> día(s)</small>
+                                            </p>
+                                            <p class="card-text">
+                                                <strong>Subtotal:
+                                                    <!--S/.<span th:text="${#numbers.formatDecimal(detalle.subtotal, 1, 2)}">7.50</span>-->
+                                                    S/.<span th:text="${#numbers.formatDecimal(alquiler.total , 1, 2)}">7.50</span>
+                                                </strong>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${alquiler.detalles == null or #lists.isEmpty(alquiler.detalles)}"
+                         class="text-center py-4">
+                        <i class="bi bi-film text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-3">No hay películas asociadas a este alquiler</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="btn-group" role="group">
+                        <a href="/alquileres" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Volver a la Lista
+                        </a>
+                        <a th:href="@{'/alquileres/editar/' + ${alquiler.idAlquiler}}" class="btn btn-primary">
+                            <i class="bi bi-pencil me-2"></i>Editar Alquiler
+                        </a>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="bi bi-gear me-2"></i>Cambiar Estado
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li th:if="${alquiler.estado.name() != 'ACTIVO'}">
+                                    <form th:action="@{'/alquileres/cambiarEstado/' + ${alquiler.idAlquiler}}"
+                                          method="post" style="display: inline;">
+                                        <input type="hidden" name="nuevoEstado" value="ACTIVO">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-check-circle text-success me-2"></i>Marcar como Activo
+                                        </button>
+                                    </form>
+                                </li>
+                                <li th:if="${alquiler.estado.name() != 'DEVUELTO'}">
+                                    <form th:action="@{'/alquileres/cambiarEstado/' + ${alquiler.idAlquiler}}"
+                                          method="post" style="display: inline;">
+                                        <input type="hidden" name="nuevoEstado" value="DEVUELTO">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-arrow-return-left text-info me-2"></i>Marcar como Devuelto
+                                        </button>
+                                    </form>
+                                </li>
+                                <li th:if="${alquiler.estado.name() != 'RETRASADO'}">
+                                    <form th:action="@{'/alquileres/cambiarEstado/' + ${alquiler.idAlquiler}}"
+                                          method="post" style="display: inline;">
+                                        <input type="hidden" name="nuevoEstado" value="RETRASADO">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-exclamation-triangle text-warning me-2"></i>Marcar como
+                                            Retrasado
+                                        </button>
+                                    </form>
+                                </li>
+                                <li th:if="${alquiler.estado.name() != 'CANCELADO'}">
+                                    <form th:action="@{'/alquileres/cambiarEstado/' + ${alquiler.idAlquiler}}"
+                                          method="post" style="display: inline;">
+                                        <input type="hidden" name="nuevoEstado" value="CANCELADO">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-x-circle text-danger me-2"></i>Marcar como Cancelado
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
