@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Sistema de Alquiler de Películas</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Animate CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: var(--primary-gradient) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            margin: 0 5px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.9);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+
+        .btn-danger {
+            background: var(--secondary-gradient);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .table thead th {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.01);
+        }
+
+        .form-control, .form-select {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .alert {
+            border-radius: 15px;
+            border: none;
+            padding: 15px 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+        }
+
+        .dashboard-card {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        .dashboard-card .card-body {
+            padding: 2rem;
+        }
+
+        .dashboard-icon {
+            font-size: 3rem;
+            opacity: 0.8;
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer {
+            background: var(--dark-gradient);
+            color: white;
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        .badge {
+            border-radius: 20px;
+            padding: 8px 15px;
+        }
+
+        .badge-success {
+            background: var(--success-gradient);
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+
+        .badge-danger {
+            background: var(--secondary-gradient);
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-film me-2"></i>
+            Blockbuster Fake
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/" th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
+                        <i class="bi bi-house-door me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/clientes" th:classappend="${currentPage == 'clientes' ? 'active' : ''}">
+                        <i class="bi bi-people me-1"></i> Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/peliculas" th:classappend="${currentPage == 'peliculas' ? 'active' : ''}">
+                        <i class="bi bi-camera-reels me-1"></i> Películas
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" th:classappend="${currentPage == 'alquileres' ? 'active' : ''}">
+                        <i class="bi bi-clipboard-check me-1"></i> Alquileres
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/alquileres"><i class="bi bi-list me-2"></i>Todos</a></li>
+                        <li><a class="dropdown-item" href="/alquileres/activos"><i class="bi bi-check-circle me-2"></i>Activos</a></li>
+                        <li><a class="dropdown-item" href="/alquileres/retrasados"><i class="bi bi-exclamation-triangle me-2"></i>Retrasados</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/alquileres/nuevo"><i class="bi bi-plus-circle me-2"></i>Nuevo Alquiler</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="container mt-4 fade-in">
+    <!-- Mensajes de alerta -->
+    <div th:if="${exito}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${exito}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Contenido dinámico -->
+    <div th:replace="${content}"></div>
+</main>
+
+<!-- Footer -->
+<footer class="footer mt-5">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="mb-0">
+                    <i class="bi bi-film me-2"></i>
+                    <strong>Blockbuster Fake</strong> - Sistema de Alquiler de Películas
+                </p>
+                <small class="text-muted">© 2025 Todos los derechos reservados</small>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+
+    // Add loading state to buttons
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Procesando...';
+                submitBtn.disabled = true;
+            }
+        });
+    });
+</script>
+</body>
+</html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title th:text="${title}">Sistema de Alquiler de Películas</title>-->
+<!--    -->
+<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    &lt;!&ndash; Bootstrap Icons &ndash;&gt;-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">-->
+<!--    &lt;!&ndash; Animate CSS &ndash;&gt;-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">-->
+<!--    -->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            &#45;&#45;secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);-->
+<!--            &#45;&#45;success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);-->
+<!--            &#45;&#45;dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);-->
+<!--        }-->
+<!--        -->
+<!--        body {-->
+<!--            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);-->
+<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
+<!--            min-height: 100vh;-->
+<!--        }-->
+<!--        -->
+<!--        .navbar {-->
+<!--            background: var(&#45;&#45;primary-gradient) !important;-->
+<!--            box-shadow: 0 4px 20px rgba(0,0,0,0.1);-->
+<!--            backdrop-filter: blur(10px);-->
+<!--        }-->
+<!--        -->
+<!--        .navbar-brand {-->
+<!--            font-weight: 700;-->
+<!--            font-size: 1.5rem;-->
+<!--            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);-->
+<!--        }-->
+<!--        -->
+<!--        .nav-link {-->
+<!--            font-weight: 500;-->
+<!--            transition: all 0.3s ease;-->
+<!--            border-radius: 20px;-->
+<!--            margin: 0 5px;-->
+<!--        }-->
+<!--        -->
+<!--        .nav-link:hover {-->
+<!--            background: rgba(255,255,255,0.2);-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+<!--        -->
+<!--        .nav-link.active {-->
+<!--            background: rgba(255,255,255,0.3);-->
+<!--            font-weight: 600;-->
+<!--        }-->
+<!--        -->
+<!--        .card {-->
+<!--            border: none;-->
+<!--            border-radius: 20px;-->
+<!--            box-shadow: 0 10px 30px rgba(0,0,0,0.1);-->
+<!--            backdrop-filter: blur(10px);-->
+<!--            background: rgba(255,255,255,0.9);-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        -->
+<!--        .card:hover {-->
+<!--            transform: translateY(-5px);-->
+<!--            box-shadow: 0 20px 40px rgba(0,0,0,0.15);-->
+<!--        }-->
+<!--        -->
+<!--        .card-header {-->
+<!--            background: var(&#45;&#45;primary-gradient);-->
+<!--            color: white;-->
+<!--            border-radius: 20px 20px 0 0 !important;-->
+<!--            font-weight: 600;-->
+<!--            padding: 1rem 1.5rem;-->
+<!--        }-->
+<!--        -->
+<!--        .btn-primary {-->
+<!--            background: var(&#45;&#45;primary-gradient);-->
+<!--            border: none;-->
+<!--            border-radius: 25px;-->
+<!--            padding: 10px 25px;-->
+<!--            font-weight: 500;-->
+<!--            transition: all 0.3s ease;-->
+<!--            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);-->
+<!--        }-->
+<!--        -->
+<!--        .btn-primary:hover {-->
+<!--            transform: translateY(-2px);-->
+<!--            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);-->
+<!--        }-->
+<!--        -->
+<!--        .btn-success {-->
+<!--            background: var(&#45;&#45;success-gradient);-->
+<!--            border: none;-->
+<!--            border-radius: 25px;-->
+<!--            padding: 10px 25px;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+<!--        -->
+<!--        .btn-danger {-->
+<!--            background: var(&#45;&#45;secondary-gradient);-->
+<!--            border: none;-->
+<!--            border-radius: 25px;-->
+<!--            padding: 10px 25px;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+<!--        -->
+<!--        .btn-info {-->
+<!--            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);-->
+<!--            border: none;-->
+<!--            border-radius: 25px;-->
+<!--            padding: 10px 25px;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+<!--        -->
+<!--        .table {-->
+<!--            border-radius: 15px;-->
+<!--            overflow: hidden;-->
+<!--            box-shadow: 0 5px 15px rgba(0,0,0,0.08);-->
+<!--        }-->
+<!--        -->
+<!--        .table thead th {-->
+<!--            background: var(&#45;&#45;primary-gradient);-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            font-weight: 600;-->
+<!--            padding: 15px;-->
+<!--        }-->
+<!--        -->
+<!--        .table tbody tr {-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        -->
+<!--        .table tbody tr:hover {-->
+<!--            background: rgba(102, 126, 234, 0.1);-->
+<!--            transform: scale(1.01);-->
+<!--        }-->
+<!--        -->
+<!--        .form-control, .form-select {-->
+<!--            border-radius: 15px;-->
+<!--            border: 2px solid #e9ecef;-->
+<!--            padding: 12px 15px;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        -->
+<!--        .form-control:focus, .form-select:focus {-->
+<!--            border-color: #667eea;-->
+<!--            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);-->
+<!--        }-->
+<!--        -->
+<!--        .alert {-->
+<!--            border-radius: 15px;-->
+<!--            border: none;-->
+<!--            padding: 15px 20px;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+<!--        -->
+<!--        .alert-success {-->
+<!--            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);-->
+<!--            color: #155724;-->
+<!--        }-->
+<!--        -->
+<!--        .alert-danger {-->
+<!--            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);-->
+<!--            color: #721c24;-->
+<!--        }-->
+<!--        -->
+<!--        .dashboard-card {-->
+<!--            background: var(&#45;&#45;primary-gradient);-->
+<!--            color: white;-->
+<!--            border-radius: 20px;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        -->
+<!--        .dashboard-card:hover {-->
+<!--            transform: translateY(-10px) scale(1.05);-->
+<!--        }-->
+<!--        -->
+<!--        .dashboard-card .card-body {-->
+<!--            padding: 2rem;-->
+<!--        }-->
+<!--        -->
+<!--        .dashboard-icon {-->
+<!--            font-size: 3rem;-->
+<!--            opacity: 0.8;-->
+<!--        }-->
+<!--        -->
+<!--        .stats-number {-->
+<!--            font-size: 2.5rem;-->
+<!--            font-weight: 700;-->
+<!--            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);-->
+<!--        }-->
+<!--        -->
+<!--        .fade-in {-->
+<!--            animation: fadeInUp 0.6s ease-out;-->
+<!--        }-->
+<!--        -->
+<!--        @keyframes fadeInUp {-->
+<!--            from {-->
+<!--                opacity: 0;-->
+<!--                transform: translateY(30px);-->
+<!--            }-->
+<!--            to {-->
+<!--                opacity: 1;-->
+<!--                transform: translateY(0);-->
+<!--            }-->
+<!--        }-->
+<!--        -->
+<!--        .footer {-->
+<!--            background: var(&#45;&#45;dark-gradient);-->
+<!--            color: white;-->
+<!--            margin-top: 3rem;-->
+<!--            padding: 2rem 0;-->
+<!--        }-->
+<!--        -->
+<!--        .badge {-->
+<!--            border-radius: 20px;-->
+<!--            padding: 8px 15px;-->
+<!--        }-->
+<!--        -->
+<!--        .badge-success {-->
+<!--            background: var(&#45;&#45;success-gradient);-->
+<!--        }-->
+<!--        -->
+<!--        .badge-warning {-->
+<!--            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);-->
+<!--        }-->
+<!--        -->
+<!--        .badge-danger {-->
+<!--            background: var(&#45;&#45;secondary-gradient);-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    &lt;!&ndash; Navbar &ndash;&gt;-->
+<!--    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">-->
+<!--        <div class="container">-->
+<!--            <a class="navbar-brand" href="/">-->
+<!--                <i class="bi bi-film me-2"></i>-->
+<!--                Blockbuster Fake-->
+<!--            </a>-->
+<!--            -->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+<!--            -->
+<!--            <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--                <ul class="navbar-nav me-auto">-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="/" th:classappend="${#request.requestURI == '/' ? 'active' : ''}">-->
+<!--                            <i class="bi bi-house-door me-1"></i> Dashboard-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="/clientes" th:classappend="${#strings.contains(#request.requestURI, 'clientes') ? 'active' : ''}">-->
+<!--                            <i class="bi bi-people me-1"></i> Clientes-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="/peliculas" th:classappend="${#strings.contains(#request.requestURI, 'peliculas') ? 'active' : ''}">-->
+<!--                            <i class="bi bi-camera-reels me-1"></i> Películas-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item dropdown">-->
+<!--                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" th:classappend="${#strings.contains(#request.requestURI, 'alquileres') ? 'active' : ''}">-->
+<!--                            <i class="bi bi-clipboard-check me-1"></i> Alquileres-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu">-->
+<!--                            <li><a class="dropdown-item" href="/alquileres"><i class="bi bi-list me-2"></i>Todos</a></li>-->
+<!--                            <li><a class="dropdown-item" href="/alquileres/activos"><i class="bi bi-check-circle me-2"></i>Activos</a></li>-->
+<!--                            <li><a class="dropdown-item" href="/alquileres/retrasados"><i class="bi bi-exclamation-triangle me-2"></i>Retrasados</a></li>-->
+<!--                            <li><hr class="dropdown-divider"></li>-->
+<!--                            <li><a class="dropdown-item" href="/alquileres/nuevo"><i class="bi bi-plus-circle me-2"></i>Nuevo Alquiler</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+
+<!--    &lt;!&ndash; Main Content &ndash;&gt;-->
+<!--    <main class="container mt-4 fade-in">-->
+<!--        &lt;!&ndash; Mensajes de alerta &ndash;&gt;-->
+<!--        <div th:if="${exito}" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--            <i class="bi bi-check-circle me-2"></i>-->
+<!--            <span th:text="${exito}"></span>-->
+<!--            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--        </div>-->
+<!--        -->
+<!--        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--            <i class="bi bi-exclamation-triangle me-2"></i>-->
+<!--            <span th:text="${error}"></span>-->
+<!--            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Contenido dinámico &ndash;&gt;-->
+<!--        <div th:replace="${content}"></div>-->
+<!--    </main>-->
+
+<!--    &lt;!&ndash; Footer &ndash;&gt;-->
+<!--    <footer class="footer mt-5">-->
+<!--        <div class="container text-center">-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <p class="mb-0">-->
+<!--                        <i class="bi bi-film me-2"></i>-->
+<!--                        <strong>Blockbuster Fake</strong> - Sistema de Alquiler de Películas-->
+<!--                    </p>-->
+<!--                    <small class="text-muted">© 2025 Todos los derechos reservados</small>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </footer>-->
+
+<!--    &lt;!&ndash; Scripts &ndash;&gt;-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>-->
+<!--    <script>-->
+<!--        // Auto-hide alerts after 5 seconds-->
+<!--        setTimeout(function() {-->
+<!--            const alerts = document.querySelectorAll('.alert');-->
+<!--            alerts.forEach(alert => {-->
+<!--                const bsAlert = new bootstrap.Alert(alert);-->
+<!--                bsAlert.close();-->
+<!--            });-->
+<!--        }, 5000);-->
+<!--        -->
+<!--        // Add loading state to buttons-->
+<!--        document.querySelectorAll('form').forEach(form => {-->
+<!--            form.addEventListener('submit', function() {-->
+<!--                const submitBtn = form.querySelector('button[type="submit"]');-->
+<!--                if (submitBtn) {-->
+<!--                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Procesando...';-->
+<!--                    submitBtn.disabled = true;-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->

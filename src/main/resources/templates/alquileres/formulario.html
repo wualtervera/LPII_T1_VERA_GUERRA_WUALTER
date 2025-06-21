@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${titulo} + ' - Blockbuster Fake'">Formulario Alquiler - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Header del formulario -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-clipboard-plus dashboard-icon mb-3"></i>
+                    <h1 class="h2 mb-3" th:text="${titulo}">Nuevo Alquiler</h1>
+                    <p class="lead text-muted">Complete los datos para crear o editar el alquiler</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card animate__animated animate__fadeInUp">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-form-select me-2"></i>
+                        Datos del Alquiler
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/alquileres/guardar}" th:object="${alquiler}" method="post" id="alquilerForm">
+                        <input type="hidden" th:field="*{idAlquiler}" />
+
+                        <div class="row g-4">
+                            <!-- Cliente -->
+                            <div class="col-md-6">
+                                <label for="cliente" class="form-label">
+                                    <i class="bi bi-person me-1"></i>
+                                    Cliente <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" th:field="*{cliente.idCliente}" id="cliente" required>
+                                    <option value="">Seleccione un cliente</option>
+                                    <option th:each="cliente : ${clientes}"
+                                            th:value="${cliente.idCliente}"
+                                            th:text="${cliente.nombre + ' - ' + cliente.email}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('cliente.idCliente')}"
+                                     th:errors="*{cliente.idCliente}"></div>
+                            </div>
+
+                            <!-- Película -->
+                            <div class="col-md-6">
+                                <label for="pelicula" class="form-label">
+                                    <i class="bi bi-camera-reels me-1"></i>
+                                    Película <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" name="peliculaSeleccionada" id="pelicula" required
+                                        th:value="${peliculaSeleccionada}">
+                                    <option value="">Seleccione una película</option>
+                                    <option th:each="pelicula : ${peliculas}"
+                                            th:value="${pelicula.idPelicula}"
+                                            th:text="${pelicula.titulo + ' (Stock: ' + pelicula.stock + ')'}"
+                                            th:selected="${peliculaSeleccionada == pelicula.idPelicula}">
+                                    </option>
+                                </select>
+                                <div class="text-danger" th:if="${errorPelicula}" th:text="${errorPelicula}"></div>
+                                <!-- Debug: Mostrar datos -->
+                                <small class="text-muted d-block">
+                                    <span th:text="'Total películas: ' + ${#lists.size(peliculas)}"></span><br/>
+                                    <span th:if="${not #lists.isEmpty(peliculas)}" th:text="'Primera película: ' + ${peliculas[0].titulo}"></span>
+                                </small>
+                            </div>
+
+                            <!-- Fecha de Alquiler -->
+                            <div class="col-md-4">
+                                <label for="fechaAlquiler" class="form-label">
+                                    <i class="bi bi-calendar-date me-1"></i>
+                                    Fecha de Alquiler <span class="text-danger">*</span>
+                                </label>
+                                <input type="date" class="form-control" th:field="*{fecha}"
+                                       id="fechaAlquiler" required />
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('fecha')}"
+                                     th:errors="*{fecha}"></div>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="col-md-4">
+                                <label for="estado" class="form-label">
+                                    <i class="bi bi-flag me-1"></i>
+                                    Estado <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" th:field="*{estado}" id="estado" required>
+                                    <option th:each="estado : ${estados}"
+                                            th:value="${estado}"
+                                            th:text="${estado.name()}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('estado')}"
+                                     th:errors="*{estado}"></div>
+                            </div>
+
+                            <!-- Precio Unitario -->
+                            <div class="col-md-4">
+                                <label for="precioUnitario" class="form-label">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Precio Unitario <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">S/</span>
+                                    <input type="number" class="form-control" name="precioUnitario"
+                                           th:value="${precioUnitario}"
+                                           id="precioUnitario" step="0.01" min="0" required />
+                                </div>
+                                <div class="text-danger" th:if="${errorPrecio}" th:text="${errorPrecio}"></div>
+                            </div>
+
+                            <!-- Cantidad -->
+                            <div class="col-md-6">
+                                <label for="cantidad" class="form-label">
+                                    <i class="bi bi-hash me-1"></i>
+                                    Cantidad <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" class="form-control" name="cantidad"
+                                       th:value="${cantidad}"
+                                       id="cantidad" min="1" value="1" required />
+                                <div class="text-danger" th:if="${errorCantidad}" th:text="${errorCantidad}"></div>
+                            </div>
+
+                            <!-- Total -->
+                            <div class="col-md-6">
+                                <label for="total" class="form-label">
+                                    <i class="bi bi-calculator me-1"></i>
+                                    Total
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">S/</span>
+                                    <input type="number" class="form-control" th:field="*{total}"
+                                           id="total" step="0.01" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/alquileres" class="btn btn-secondary">
+                                        <i class="bi bi-arrow-left me-2"></i>
+                                        Cancelar
+                                    </a>
+                                    <div>
+                                        <button type="reset" class="btn btn-warning me-2">
+                                            <i class="bi bi-arrow-clockwise me-2"></i>
+                                            Limpiar
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-save me-2"></i>
+                                            <span th:text="${alquiler.idAlquiler == null ? 'Crear Alquiler' : 'Actualizar Alquiler'}">
+                                                    Guardar
+                                                </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <i class="bi bi-info-circle text-primary mb-2" style="font-size: 2rem;"></i>
+                            <h6>Información Importante</h6>
+                            <small class="text-muted">Verifique todos los datos antes de guardar</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="bi bi-calendar-week text-success mb-2" style="font-size: 2rem;"></i>
+                            <h6>Fechas</h6>
+                            <small class="text-muted">Se registra la fecha actual del alquiler</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="bi bi-currency-dollar text-warning mb-2" style="font-size: 2rem;"></i>
+                            <h6>Precios</h6>
+                            <small class="text-muted">El total se calcula automáticamente</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="bi bi-check-circle text-info mb-2" style="font-size: 2rem;"></i>
+                            <h6>Estado</h6>
+                            <small class="text-muted">Seleccione el estado apropiado</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const precioInput = document.getElementById('precioUnitario');
+        const cantidadInput = document.getElementById('cantidad');
+        const totalInput = document.getElementById('total');
+        const fechaAlquilerInput = document.getElementById('fechaAlquiler');
+
+        // Calcular total automáticamente
+        function calcularTotal() {
+            const precio = parseFloat(precioInput.value) || 0;
+            const cantidad = parseInt(cantidadInput.value) || 0;
+            const total = precio * cantidad;
+            totalInput.value = total.toFixed(2);
+        }
+
+        // Event listeners
+        precioInput.addEventListener('input', calcularTotal);
+        cantidadInput.addEventListener('input', calcularTotal);
+
+        // Establecer fecha mínima como hoy
+        const today = new Date().toISOString().split('T')[0];
+        fechaAlquilerInput.min = today;
+
+        // Si es un nuevo alquiler, establecer fecha de hoy
+        if (!fechaAlquilerInput.value) {
+            fechaAlquilerInput.value = today;
+        }
+
+        // Calcular total inicial si hay valores
+        calcularTotal();
+    });
+</script>
+</body>
+</html>

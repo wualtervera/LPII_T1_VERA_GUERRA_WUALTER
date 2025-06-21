@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${'Ver ' + pelicula.titulo + ' - Blockbuster Fake'}">Ver Película - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h2 mb-0">
+                                <i class="bi bi-eye me-2"></i>Detalles de la Película
+                            </h1>
+                            <p class="text-muted mt-2">Información completa de la película</p>
+                        </div>
+                        <div>
+                            <a href="/peliculas" class="btn btn-outline-secondary me-2">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Catálogo
+                            </a>
+                            <a th:href="@{/peliculas/editar/{id}(id=${pelicula.idPelicula})}" class="btn btn-primary">
+                                <i class="bi bi-pencil me-2"></i>Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información de la película -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Información General
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 text-center mb-4">
+                            <div class="p-4 bg-light rounded-3">
+                                <i class="bi bi-camera-reels" style="font-size: 4rem; color: #6c757d;"></i>
+                                <h2 class="mt-3 mb-2" th:text="${pelicula.titulo}">Título de la Película</h2>
+                                <span class="badge bg-primary fs-6" th:text="${pelicula.genero}">Género</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-hash text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <strong>ID de Película</strong>
+                                </div>
+                                <p class="ms-4 mb-0" th:text="${pelicula.idPelicula}">1</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-type text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <strong>Título</strong>
+                                </div>
+                                <p class="ms-4 mb-0" th:text="${pelicula.titulo}">Título</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-tag text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <strong>Género</strong>
+                                </div>
+                                <p class="ms-4 mb-0">
+                                    <span class="badge bg-secondary fs-6" th:text="${pelicula.genero}">Género</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-box text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <strong>Stock Disponible</strong>
+                                </div>
+                                <p class="ms-4 mb-0">
+                                    <span class="fs-4 fw-bold" th:text="${pelicula.stock}">0</span> unidades
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Estado actual -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clipboard-check me-2"></i>Estado Actual
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <div th:if="${pelicula.stock > 0}">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                        <h4 class="text-success mt-3 mb-2">Disponible</h4>
+                        <p class="text-muted mb-0">La película está disponible para alquiler</p>
+                    </div>
+                    <div th:if="${pelicula.stock == 0}">
+                        <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
+                        <h4 class="text-danger mt-3 mb-2">Agotada</h4>
+                        <p class="text-muted mb-0">No hay copias disponibles</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning me-2"></i>Acciones Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/peliculas/editar/{id}(id=${pelicula.idPelicula})}"
+                           class="btn btn-primary">
+                            <i class="bi bi-pencil me-2"></i>Editar Película
+                        </a>
+
+                        <a th:if="${pelicula.stock > 0}"
+                           href="/alquileres/nuevo"
+                           class="btn btn-success">
+                            <i class="bi bi-plus-circle me-2"></i>Crear Alquiler
+                        </a>
+
+                        <a href="/peliculas" class="btn btn-outline-secondary">
+                            <i class="bi bi-list me-2"></i>Ver Todas las Películas
+                        </a>
+
+                        <a href="/peliculas/disponibles" class="btn btn-outline-info">
+                            <i class="bi bi-check-circle me-2"></i>Ver Disponibles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up me-2"></i>Estadísticas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="bi bi-box text-primary" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2 mb-1" th:text="${pelicula.stock}">0</h4>
+                                <small class="text-muted">Stock Total</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2 mb-1" th:text="${pelicula.stock > 0 ? pelicula.stock : 0}">0</h4>
+                                <small class="text-muted">Disponibles</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="bi bi-clock text-warning" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2 mb-1">0</h4>
+                                <small class="text-muted">En Alquiler</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <i class="bi bi-star text-info" style="font-size: 2rem;"></i>
+                                <h4 class="mt-2 mb-1">--</h4>
+                                <small class="text-muted">Popularidad</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .info-item {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid var(--bs-primary);
+    }
+
+    .stat-item {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+</style>
+</body>
+</html>

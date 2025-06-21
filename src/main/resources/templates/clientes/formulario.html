@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="${titulo} + ' - Blockbuster Fake'">Cliente - Blockbuster Fake</title>
+</head>
+<body>
+<section>
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/" class="text-decoration-none">
+                    <i class="bi bi-house-door me-1"></i>Inicio
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/clientes" class="text-decoration-none">Clientes</a>
+            </li>
+            <li class="breadcrumb-item active" th:text="${titulo}">Nuevo Cliente</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-0">
+                <i class="bi bi-person-plus me-2" th:if="${cliente.idCliente == null}"></i>
+                <i class="bi bi-person-gear me-2" th:if="${cliente.idCliente != null}"></i>
+                <span th:text="${titulo}">Nuevo Cliente</span>
+            </h1>
+            <p class="text-muted mb-0" th:text="${cliente.idCliente == null ? 'Registra un nuevo cliente en el sistema' : 'Actualiza la información del cliente'}">
+                Registra un nuevo cliente en el sistema
+            </p>
+        </div>
+        <div>
+            <a href="/clientes" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>
+                Volver
+            </a>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-person me-2"></i>
+                        Información del Cliente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post" novalidate>
+                        <!-- Campo oculto para ID -->
+                        <input type="hidden" th:field="*{idCliente}">
+
+                        <div class="row">
+                            <!-- Nombre -->
+                            <div class="col-md-12 mb-3">
+                                <label for="nombre" class="form-label">
+                                    <i class="bi bi-person me-1"></i>
+                                    Nombre completo <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       th:class="${#fields.hasErrors('nombre')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="nombre"
+                                       th:field="*{nombre}"
+                                       placeholder="Ingrese el nombre completo del cliente"
+                                       maxlength="100"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
+                                    Error en nombre
+                                </div>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Máximo 100 caracteres
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-12 mb-4">
+                                <label for="email" class="form-label">
+                                    <i class="bi bi-envelope me-1"></i>
+                                    Correo electrónico <span class="text-danger">*</span>
+                                </label>
+                                <input type="email"
+                                       class="form-control"
+                                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="email"
+                                       th:field="*{email}"
+                                       placeholder="ejemplo@correo.com"
+                                       maxlength="150"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                                    Error en email
+                                </div>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Debe ser un email válido y único en el sistema
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <a href="/clientes" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    <span th:text="${cliente.idCliente == null ? 'Crear Cliente' : 'Actualizar Cliente'}">
+                                            Crear Cliente
+                                        </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Datos Seguros</h6>
+                            <small class="text-muted">Tu información está protegida</small>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-lightning text-warning" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Proceso Rápido</h6>
+                            <small class="text-muted">Registro en segundos</small>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-check-all text-primary" style="font-size: 2rem;"></i>
+                            <h6 class="mt-2">Validación Automática</h6>
+                            <small class="text-muted">Verificamos los datos por ti</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+    </style>
+
+    <script>
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const nombreInput = document.getElementById('nombre');
+            const emailInput = document.getElementById('email');
+
+            // Validar nombre
+            nombreInput.addEventListener('input', function() {
+                if (this.value.trim().length < 2) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+
+            // Validar email
+            emailInput.addEventListener('input', function() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(this.value)) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+
+            // Prevenir envío si hay errores
+            form.addEventListener('submit', function(e) {
+                const invalidInputs = form.querySelectorAll('.is-invalid');
+                if (invalidInputs.length > 0) {
+                    e.preventDefault();
+                    invalidInputs[0].focus();
+                }
+            });
+        });
+    </script>
+</section>
+</body>
+</html>
